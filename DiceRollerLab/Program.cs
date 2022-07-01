@@ -1,131 +1,127 @@
-﻿public class Program
+﻿int sides;
+//methods need two params
+//method for dice combination
+//method for totals
+Console.WriteLine("Welcome to my Super Casino!\nThis game is called Dice Roller!");
+while (true)
 {
-    static int die1;
-    static int die2;
-    static int sum;
-    static int sides;
-    public static void Main()
+    try
     {
-        //methods need two params
-        //method for dice combination
-        //method for totals
-        Console.WriteLine("Welcome to my Super Casino!\nThis game is called Dice Roller!");
-        while (true)
+        sides = int.Parse(GetUserInput("How many sides should the die have?"));
+        if (sides < 1)
         {
-            try
-            {
-                sides = int.Parse(GetUserInput("How many sides should the die have?"));
-                if (sides < 1)
-                {
-                    Console.WriteLine("INVALID");
-                    continue;
-                }
-            }
-            catch
-            {
-                Console.WriteLine("INVALID");
-                continue;
-            }
-            while (true)
-            {
-                DiceRoller();
-                bool check = GoAgain();
-                if (check == false)
-                {
-                    break;
-                }
-            }
+            Console.WriteLine("INVALID");
+            continue;
+        }
+    }
+    catch
+    {
+        Console.WriteLine("INVALID");
+        continue;
+    }
+    while (true)
+    {
+        int die1 = 0;
+        int die2 = 0;
+        int sum = 0;
+        DiceRoller(die1 + die2, die1, sum, sides);
+        bool check = GoAgain();
+        if (check == false)
+        {
             break;
         }
     }
-    //METHODS
-    static string GetUserInput(string prompt)
+    break;
+}
+
+//METHODS
+static string GetUserInput(string prompt)
+{
+    Console.WriteLine(prompt);
+    string output = Console.ReadLine();
+    return output;
+}
+//combinations 
+static void SixSidedDie(int die1, int die2, int sum)
+{
+    //Snake Eyes: Two 1s
+    if (die1 == 1 && die2 == 1)
     {
-        Console.WriteLine(prompt);
-        string output = Console.ReadLine();
-        return output;
+        Console.WriteLine();
+        string message = "==>Snake Eyes!";
+        Console.WriteLine(message);
     }
-    //combinations 
-    static void SixSidedDie()
+    //Ace Deuce: A 1 and 2
+    else if (die1 == 1 && die2 == 2)
     {
-        //Snake Eyes: Two 1s
-        if (die1 == 1 && die2 == 1)
-        {
-            Console.WriteLine();
-            string message = "==>Snake Eyes!";
-            Console.WriteLine(message);
-        }
-        //Ace Deuce: A 1 and 2
-        else if (die1 == 1 && die2 == 2)
-        {
-            Console.WriteLine();
-            string message = "==>Ace Deuce!";
-            Console.WriteLine(message);
-        }
-        //Box Cars: Two 6s
-        else if (die1 == 6 && die2 == 6 || sum == 12)
-        {
-            Console.WriteLine();
-            string message = "==>Box Cars!";
-            Console.WriteLine(message);
-        }
-        //Win: A total of 7 or 11
-        else if (sum == 7 || sum == 11)
-        {
-            Console.WriteLine();
-            string message = "==>A Win!";
-            Console.WriteLine(message);
-            //Craps: A total of 2, 3, or 12 (will also generate another message!)
-        }
-        else if (sum == 2 || sum == 3 )
-        {
-            Console.WriteLine();
-            string message = "==>Craps!";
-            Console.WriteLine(message);
-        }
+        Console.WriteLine();
+        string message = "==>Ace Deuce!";
+        Console.WriteLine(message);
     }
-    //generate random numbers
-    static void DiceRoller()
+    //Box Cars: Two 6s
+    else if (die1 == 6 && die2 == 6 || sum == 12)
     {
-        Random dice = new Random();
-        die1 = dice.Next(1, sides + 1);
-        die2 = dice.Next(1, sides + 1);
-        sum = die1 + die2;
-        if (sides <= 6 || sides >=1 )
-        {
-            SixSidedDie();
-        }
-        Console.WriteLine($"You rolled {die1} and {die2} => total {sum}");
+        Console.WriteLine();
+        string message = "==>Box Cars!";
+        Console.WriteLine(message);
     }
-    static bool GoAgain()
+    //Win: A total of 7 or 11
+    else if (sum == 7 || sum == 11)
     {
-        while (true)
+        Console.WriteLine();
+        string message = "==>A Win!";
+        Console.WriteLine(message);
+        //Craps: A total of 2, 3, or 12 (will also generate another message!)
+    }
+    else if (sum == 2 || sum == 3)
+    {
+        Console.WriteLine();
+        string message = "==>Craps!";
+        Console.WriteLine(message);
+    }
+}
+//generate random numbers
+static void DiceRoller(int die1, int die2, int sum, int sides)
+{
+    Random dice = new Random();
+
+    die1 = dice.Next(1, sides + 1);
+    die2 = dice.Next(1, sides + 1);
+    sum = die1 + die2;
+    if (sides <= 6 || sides >= 1)
+    {
+        SixSidedDie(die1, die2, sum);
+    }
+    Console.WriteLine($"You rolled {die1} and {die2} => total {sum}");
+}
+static bool GoAgain()
+{
+    while (true)
+    {
+        Console.WriteLine();
+        Console.WriteLine("Do you want to go again (y/n)?");
+        string input = Console.ReadLine();
+        try
         {
-            Console.WriteLine();
-            Console.WriteLine("Do you want to go again (y/n)?");
-            string input = Console.ReadLine();
-            try
+            if (input.ToLower().Trim() == "y")
             {
-                if (input.ToLower().Trim() == "y")
-                {
-                    Console.WriteLine("Okay!");
-                    Console.WriteLine();
-                    return true;
-                }
-                else if (input.ToLower().Trim() == "n")
-                {
-                    Console.WriteLine("Okay bye!");
-                    return false;
-                }
-                else
-                {
-                    throw new Exception("Not a valid option, please try again.");
-                }
+                Console.WriteLine("Okay!");
+                Console.WriteLine();
+                return true;
             }
-            catch (Exception e)
+            else if (input.ToLower().Trim() == "n")
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine("Okay bye!");
+                return false;
             }
+            else
+            {
+                throw new Exception("Not a valid option, please try again.");
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
         }
     }
 }
